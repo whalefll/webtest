@@ -27,6 +27,9 @@ function Statit(dz, t, cat, id, end, ids) {
             "start": starts,
             "end": ends
         },
+        Headers:{
+            "Referer": "https://www.360kan.com"
+        },
         dataType: 'jsonp',
         async: false,
         success: function(data) {
