@@ -17,20 +17,21 @@ function Statit(dz, t, cat, id, end, ids) {
        if(ends>parseInt(end)){
            ends=parseInt(end);
        }
-      $.ajax({
-        type: 'GET',
-        url: 'https://api.web.360kan.com/v1/detail',
-        data: {
-            "cat": cat,
+      var UrlData={
+           "cat": cat,
             "id": id,
             "site": dz,
             "start": starts,
-            "end": ends
+        "end": ends
+      };
+      $.ajax({
+        type: 'GET',
+        url:"/GetData.php",
+        data:{
+            "url":"/v1/detail?cat={cat}&id={id}&site={site}&start={start}&end={end}".signMix(UrlData)
         },
-        Headers:{
-            "Referer": "https://www.360kan.com"
-        },
-        dataType: 'jsonp',
+       
+        dataType: 'json',
         async: false,
         success: function(data) {
             let html="";
@@ -56,17 +57,20 @@ function Statit(dz, t, cat, id, end, ids) {
 //   $("#playlist1 ul").html(html_);
 };
 function getData(cat,id,dz,starts,ends){
-    $.ajax({
-        type: 'GET',
-        url: 'https://api.web.360kan.com/v1/detail',
-        data: {
+   var Urldata= {
             "cat": cat,
             "id": id,
             "site": dz,
             "start": starts,
             "end": ends
+        };
+    $.ajax({
+        type: 'GET',
+        url:"/GetData.php",
+        data:{
+            "url":"/v1/detail?cat={cat}&id={id}&site={site}&start={start}&end={end}".signMix(Urldata)
         },
-        dataType: 'jsonp',
+        dataType: 'json',
         async: false,
         success: function(data) {
             let html="";
@@ -89,18 +93,21 @@ function getData(cat,id,dz,starts,ends){
     });
 }
 function hqzy(cat, id, ysyz, year) {
-    var html_ = '';
-    layer.load(2)
-    $.ajax({
-        type: 'GET',
-        url: 'https://api.web.360kan.com/v1/detail',
-        data: {
+    var Urldata= {
             "cat": cat,
             "id": id,
             "site": ysyz,
             "year": year
+        };
+    var html_ = '';
+    layer.load(2)
+    $.ajax({
+        type: 'GET',
+         url:"/GetData.php",
+        data:{
+            "url":"/v1/detail?cat={cat}&id={id}&site={site}&year={year}".signMix(Urldata)
         },
-        dataType: 'jsonp',
+        dataType: 'json',
         cache: false,
         async: true,
         success: function(data) {
@@ -317,4 +324,17 @@ if (playli > 30) {
         "max-height": " 300px",
         "overflow-y": "scroll"
     });
+}
+String.prototype.signMix= function() {
+	if(arguments.length === 0) return this;
+	var param = arguments[0], str= this;
+	if(typeof(param) === 'object') {
+		for(var key in param)
+			str = str.replace(new RegExp("\\{" + key + "\\}", "g"), param[key]);
+		return str;
+	} else {
+		for(var i = 0; i < arguments.length; i++)
+			str = str.replace(new RegExp("\\{" + i + "\\}", "g"), arguments[i]);
+		return str;
+	}
 }
